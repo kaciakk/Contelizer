@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const HomePage = () => {
   const [fileContent, setFileContent] = useState("");
   const [fileName, setFileName] = useState("");
   const [shuffledContent, setShuffledContent] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -29,6 +30,7 @@ const HomePage = () => {
     setFileContent("");
     setFileName("");
     setShuffledContent("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const shuffleWord = (word) => {
@@ -52,7 +54,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
-      <div className="w-full max-w-4xl text-center">
+      <div className="w-full max-w-5xl text-center">
         <h1 className="text-3xl font-bold mb-6 text-blue-700">
           Wgraj plik tekstowy
         </h1>
@@ -61,40 +63,43 @@ const HomePage = () => {
           <input
             type="file"
             accept=".txt"
+            ref={fileInputRef}
             onChange={handleFileChange}
             className="border border-gray-300 p-2 rounded w-full mb-4 focus:ring-2 focus:ring-blue-400"
           />
 
           {fileName && (
             <>
-              <p className="font-semibold mb-2 text-gray-800">
+              <p className="font-semibold mb-3 text-gray-800">
                 Wczytano plik:{" "}
                 <span className="text-blue-600 font-medium">{fileName}</span>
               </p>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
-              >
-                Wyczyść
-              </button>
+              <div className="flex justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
+                >
+                  Wyczyść
+                </button>
+              </div>
             </>
           )}
         </form>
 
         {fileContent && (
-          <div className="mt-8 bg-white shadow-lg rounded-2xl p-6 text-left whitespace-pre-wrap">
-            <h2 className="font-semibold mb-2 text-blue-700">
+          <div className="mt-8 bg-white shadow-lg rounded-2xl p-8 text-left">
+            <h2 className="font-semibold mb-3 text-blue-700 text-lg">
               Oryginalny tekst:
             </h2>
-            <pre className="text-sm text-gray-800 bg-gray-50 p-3 rounded mb-4 overflow-x-auto">
+            <pre className="text-base text-gray-800 bg-gray-50 p-5 rounded border border-gray-200 leading-relaxed overflow-y-auto max-h-[80vh]">
               {fileContent}
             </pre>
 
-            <h2 className="font-semibold mb-2 text-green-700">
+            <h2 className="font-semibold mb-3 text-green-700 text-lg">
               Tekst po przetasowaniu:
             </h2>
-            <pre className="text-sm text-gray-800 bg-gray-50 p-3 rounded overflow-x-auto">
+            <pre className="text-base text-gray-800 bg-gray-50 p-5 rounded border border-gray-200 leading-relaxed overflow-y-auto max-h-[80vh]">
               {shuffledContent}
             </pre>
           </div>
